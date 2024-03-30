@@ -1,0 +1,92 @@
+sudo dpkg -i /Downloads/Yandex.deb 
+[sudo] password for jbjohn: 
+Selecting previously unselected package yandex-browser-stable.
+(Reading database ... 36566 files and directories currently installed.)
+Preparing to unpack /Downloads/Yandex.deb ...
+Unpacking yandex-browser-stable (24.1.1.940-1) ...
+dpkg: dependency problems prevent configuration of yandex-browser-stable:
+ yandex-browser-stable depends on binutils; however:
+  Package binutils is not installed.
+ yandex-browser-stable depends on jq; however:
+  Package jq is not installed.
+ yandex-browser-stable depends on libcurl3-gnutls | libcurl3-nss | libcurl4 | libcurl3; however:
+  Package libcurl3-gnutls is not installed.
+  Package libcurl3-nss is not installed.
+  Package libcurl4 is not installed.
+  Package libcurl3 is not installed.
+ yandex-browser-stable depends on libgbm1 (>= 17.1.0~rc2); however:
+  Package libgbm1 is not installed.
+ yandex-browser-stable depends on libnspr4 (>= 2:4.9-2~); however:
+  Package libnspr4 is not installed.
+ yandex-browser-stable depends on libnss3 (>= 2:3.35); however:
+  Package libnss3 is not installed.
+ yandex-browser-stable depends on squashfs | squashfs-tools; however:
+  Package squashfs is not installed.
+  Package squashfs-tools is not installed.
+ yandex-browser-stable depends on xdg-utils (>= 1.0.2); however:
+  Package xdg-utils is not installed.
+
+dpkg: error processing package yandex-browser-stable (--install):
+ dependency problems - leaving unconfigured
+Processing triggers for mime-support (3.64ubuntu1) ...
+Errors were encountered while processing:
+ yandex-browser-stable
+------------------------------------------------------------------------------
+binutils jq libcurl3-gnutls libgbm1 libnspr4 libnss3 squashfs-tools xdg-utils
+------------------------------------------------------------------------------
+sudo apt-get install -f -s
+--------------------------
+The following additional packages will be installed:
+  binutils binutils-common binutils-x86-64-linux-gnu cpp cpp-9 gcc-9-base jq libasn1-8-heimdal libauthen-sasl-perl libbinutils libctf-nobfd0 libctf0 libcurl3-gnutls
+  libdata-dump-perl libencode-locale-perl libfile-basedir-perl libfile-desktopentry-perl libfile-listing-perl libfile-mimeinfo-perl libfont-afm-perl libgbm1
+  libgssapi3-heimdal libhcrypto4-heimdal libheimbase1-heimdal libheimntlm0-heimdal libhtml-form-perl libhtml-format-perl libhtml-parser-perl libhtml-tagset-perl
+  libhtml-tree-perl libhttp-cookies-perl libhttp-daemon-perl libhttp-date-perl libhttp-message-perl libhttp-negotiate-perl libhx509-5-heimdal libio-html-perl
+  libio-socket-ssl-perl libio-stringy-perl libipc-system-simple-perl libisl22 libjq1 libkrb5-26-heimdal libldap-2.4-2 libldap-common liblwp-mediatypes-perl
+  liblwp-protocol-https-perl liblzo2-2 libmailtools-perl libmpc3 libmpfr6 libnet-dbus-perl libnet-http-perl libnet-smtp-ssl-perl libnet-ssleay-perl libnghttp2-14 libnspr4
+  libnss3 libonig5 libroken18-heimdal librtmp1 libsasl2-2 libsasl2-modules libsasl2-modules-db libssh-4 libtext-iconv-perl libtie-ixhash-perl libtimedate-perl
+  libtry-tiny-perl liburi-perl libwayland-server0 libwind0-heimdal libwww-perl libwww-robotrules-perl libx11-protocol-perl libxml-parser-perl libxml-twig-perl
+  libxml-xpathengine-perl perl-openssl-defaults squashfs-tools x11-xserver-utils xdg-utils
+Suggested packages:
+  binutils-doc cpp-doc gcc-9-locales libdigest-hmac-perl libgssapi-perl libcrypt-ssleay-perl libsasl2-modules-gssapi-mit | libsasl2-modules-gssapi-heimdal
+  libsasl2-modules-ldap libsasl2-modules-otp libsasl2-modules-sql libauthen-ntlm-perl libunicode-map8-perl libunicode-string-perl xml-twig-tools nickle cairo-5c
+  xorg-docs-core
+The following NEW packages will be installed:
+  binutils binutils-common binutils-x86-64-linux-gnu cpp cpp-9 gcc-9-base jq libasn1-8-heimdal libauthen-sasl-perl libbinutils libctf-nobfd0 libctf0 libcurl3-gnutls
+  libdata-dump-perl libencode-locale-perl libfile-basedir-perl libfile-desktopentry-perl libfile-listing-perl libfile-mimeinfo-perl libfont-afm-perl libgbm1
+  libgssapi3-heimdal libhcrypto4-heimdal libheimbase1-heimdal libheimntlm0-heimdal libhtml-form-perl libhtml-format-perl libhtml-parser-perl libhtml-tagset-perl
+  libhtml-tree-perl libhttp-cookies-perl libhttp-daemon-perl libhttp-date-perl libhttp-message-perl libhttp-negotiate-perl libhx509-5-heimdal libio-html-perl
+  libio-socket-ssl-perl libio-stringy-perl libipc-system-simple-perl libisl22 libjq1 libkrb5-26-heimdal libldap-2.4-2 libldap-common liblwp-mediatypes-perl
+  liblwp-protocol-https-perl liblzo2-2 libmailtools-perl libmpc3 libmpfr6 libnet-dbus-perl libnet-http-perl libnet-smtp-ssl-perl libnet-ssleay-perl libnghttp2-14 libnspr4
+  libnss3 libonig5 libroken18-heimdal librtmp1 libsasl2-2 libsasl2-modules libsasl2-modules-db libssh-4 libtext-iconv-perl libtie-ixhash-perl libtimedate-perl
+  libtry-tiny-perl liburi-perl libwayland-server0 libwind0-heimdal libwww-perl libwww-robotrules-perl libx11-protocol-perl libxml-parser-perl libxml-twig-perl
+  libxml-xpathengine-perl perl-openssl-defaults squashfs-tools x11-xserver-utils xdg-utils
+----------------------------------------------------------------------------------------------------
+#!/bin/bash
+DEBIAN_FRONTEND=noninteractive dpkg -i /Downloads/Yandex.deb || \
+{ DEBIAN_FRONTEND=noninteractive apt-get install -f -y && \
+  DEBIAN_FRONTEND=noninteractive dpkg -i /Downloads/Yandex.deb ; }
+====================================================================================================
+^<--- Вот так удалось установить Яндекс-Браузер со всеми зависимостями.
+
+Запуск:
+yandex-browser --no-sandbox
+
+НО. Работает КРАЙНЕ не стабильно. Сайты не грузит. Регулярно вылетает с разными ошибками.
+Типа:
+[6569:6569:0330/112402.244172:ERROR:shared_space_service_impl.cc(2776)] Trying to remove a non existed tab
+[6569:6569:0330/112440.787705:ERROR:interface_endpoint_client.cc(702)] Message 0 rejected by interface blink.mojom.WidgetHost
+Trace/breakpoint trap (core dumped)
+
+[5835:5835:0330/112256.906542:ERROR:browser_child_process_host_impl.cc(923)] Terminating child process for bad message: Received bad user message: Validation failed for viz.mojom.CopyOutputResultSender.0  [VALIDATION_ERROR_DESERIALIZATION_FAILED]
+[5871:5887:0330/112257.415293:ERROR:ssl_client_socket_impl.cc(1289)] handshake failed; returned -1, SSL error code 1, net_error -3
+Trace/breakpoint trap (core dumped)
+
+[2517:2517:0330/103932.913491:ERROR:gl_display.cc(515)] EGL Driver message (Critical) eglInitialize: Could not create a backing OpenGL context.
+[2517:2517:0330/103932.913544:ERROR:gl_display.cc(786)] eglInitialize OpenGLES failed with error EGL_NOT_INITIALIZED
+[2517:2517:0330/103932.913607:ERROR:gl_display.cc(820)] Initialization of all EGL display types failed.
+[2517:2517:0330/103932.913687:ERROR:gl_ozone_egl.cc(26)] GLDisplayEGL::Initialize failed.
+[2517:2517:0330/103932.915703:ERROR:viz_main_impl.cc(202)] Exiting GPU process due to errors during initialization
+[2431:2437:0330/103933.494414:ERROR:ssl_client_socket_impl.cc(1289)] handshake failed; returned -1, SSL error code 1, net_error -3
+[2431:2437:0330/103933.494687:ERROR:ssl_client_socket_impl.cc(1289)] handshake failed; returned -1, SSL error code 1, net_error -3
+
+ПОЛЬЗОВАТЬСЯ НЕВОЗМОЖНО.

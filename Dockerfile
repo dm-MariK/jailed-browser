@@ -47,6 +47,7 @@ RUN <<EOT bash
   echo "${user}:${password}" | chpasswd
   echo -e "\necho \"Your password is: ${password}\" \n" >> /home/${user}/.bashrc
   ln -s /Downloads /home/${user}/Downloads
+  chmod +x /home/${user}/genLocalXcookie.sh
   # ----- \end{non-root-user-section} ----------------------------
 EOT
 

@@ -29,5 +29,5 @@ if [[ -L ${Lnk2unixSocket} ]] ; then
   fi
 fi
 
-echo "Will create symlink ${Lnk2unixSocket} to ${Lnk2unixSocket}"
+echo "Will create symlink ${Lnk2unixSocket} to ${socketFile}"
 ln -s "${socketFile}" "${Lnk2unixSocket}"

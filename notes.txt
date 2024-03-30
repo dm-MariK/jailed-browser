@@ -1,0 +1,283 @@
+The ARG instruction defines a variable that users can pass at build-time to the builder with the docker build command using the --build-arg <varname>=<value> flag.
+
+The ENV instruction sets the environment variable <key> to the value <value>. This value will be in the environment for all subsequent instructions in the build stage and can be replaced inline in many as well.
+A stage inherits any environment variables that were set using ENV by its parent stage or any ancestor.
+If an environment variable is only needed during build, and not in the final image, consider using ARG, which is not persisted in the final image:
+```￼
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y ...
+```
+
+Use the -e, --env, and --env-file flags to set simple (non-array) environment variables in the container you're running, or overwrite variables defined in the Dockerfile of the image you're running.
+You can also use variables exported to your local environment.
+When running the command, the Docker CLI client checks the value the variable has in your local environment and passes it to the container. If no = is provided and that variable isn't exported in your local environment, the variable is unset in the container.
+----------------------------------------------------------------------------------------------------
+ADD and COPY are both Dockerfile instructions that serve similar purposes. They let you copy files from a specific location into a Docker image1. Here are the differences:
+ * COPY takes in a source and destination. It only lets you copy in a local file or directory from your host (the machine building the Docker image) into the Docker image itself.
+```
+COPY <src> <dest>
+```￼
+* ADD does the same but in addition, it also supports 2 other sources:
+   A URL instead of a local file/directory.
+   Extract tar from the source directory into the destination.
+If you are copying local files to your Docker image, always use COPY because it’s more explicit.
+----------------------------------------------------------------------------------------------------
+Does copy dockerfile instruction overwrite existing files?
+Yes, the COPY instruction in a Dockerfile will overwrite existing files in the destination directory. If the destination already contains a file with the same name, the COPY instruction will replace it with the file being copied.
+----------------------------------------------------------------------------------------------------
+COPY [--chown=<user>:<group>] [--chmod=<perms> ...] <src> ... <dest>
+All files and directories copied from the build context are created with a UID and GID of 0.unless the optional --chown flag specifies a given username, groupname, or UID/GID combination to request specific ownership of the copied content. 
+----------------------------------------------------------------------------------------------------
+Configs' rights
+---------------
+marik@dm-ThinkPad-X280:~/GIT/focal-gui-xclient$ sudo tar xf configs.tar.bz2 --overwrite --directory=/home/marik/tmp_docs/_test_configs/
+[sudo] пароль для marik: 
+
+marik@dm-ThinkPad-X280:~/GIT/focal-gui-xclient$ sudo ls -la /home/marik/tmp_docs/_test_configs/
+итого 16
+drwxrwxr-x  4 marik marik 4096 мар 27 08:27 .
+drwxrwxr-x 27 marik marik 4096 мар 27 08:26 ..
+drwxr-xr-x  3 root  root  4096 окт 26 22:11 etc
+drwxr-xr-x  2 root  root  4096 окт 26 22:26 root
+
+marik@dm-ThinkPad-X280:~/GIT/focal-gui-xclient$ sudo ls -la /home/marik/tmp_docs/_test_configs/root/
+итого 16
+drwxr-xr-x 2 root  root  4096 окт 26 22:26 .
+drwxrwxr-x 4 marik marik 4096 мар 27 08:27 ..
+-rw-r--r-- 1 root  root   221 апр  8  2023 .bash_logout
+-rw-r--r-- 1 root  root  3725 окт 26 22:26 .bashrc
+
+marik@dm-ThinkPad-X280:~/GIT/focal-gui-xclient$ sudo ls -la /home/marik/tmp_docs/_test_configs/etc/
+итого 24
+drwxr-xr-x 3 root  root  4096 окт 26 22:11 .
+drwxrwxr-x 4 marik marik 4096 мар 27 08:27 ..
+-rw-r--r-- 1 root  root  3048 апр 23  2023 adduser.conf
+-rw-r--r-- 1 root  root  2395 апр 11  2023 bash.bashrc
+-rw-r--r-- 1 root  root  1744 апр 11  2023 inputrc
+drwxr-xr-x 2 root  root  4096 окт 26 22:22 skel
+
+marik@dm-ThinkPad-X280:~/GIT/focal-gui-xclient$ sudo ls -la /home/marik/tmp_docs/_test_configs/etc/skel/
+итого 20
+drwxr-xr-x 2 root root 4096 окт 26 22:22 .
+drwxr-xr-x 3 root root 4096 окт 26 22:11 ..
+-rw-r--r-- 1 root root 4413 окт 26 22:22 .bashrc
+-rw-r--r-- 1 root root  937 окт 26 22:21 .profile
+
+ALL FILES and DIRS OWNED BY root:root
+ALL FILES HAVE ACCESS RIGHTS 644
+ALL DIRS HAVE ACCESS RIGHTS 755
+----------------------------------------------------------------------------------------------------
+$ apt-cache search sshuttle
+sshoot - manage multiple sshuttle VPN sessions
+sshuttle - Transparent proxy server for VPN over SSH
+----------------------------------------------------------------------------------------------------
+docker build ~/GIT/focal-gui-xclient/ -t focal-gui-xclient
+Опция -t focal-gui-xclient позволяет задать "tag", т.е. имя образа, по которому мы можем его идентифицировать в дальнейшем.
+
+docker create --name ml_r2022b -ti -h ml_r2022b -v /home/user-1/DOCKER_SHARE/MatLab:/data -v /etc/localtime:/etc/localtime focal-gui-xclient
+
+docker start -ai ml_r2022b
+----------------------------------------------------------------------------------------------------
+jailed-browser
+--------------
+docker create
+
+-v
+/home/marik/Downloads/jailed-browser:/Downloads
+/etc/localtime:/etc/localtime
+/tmp/.X11-unix/X0:/tmp/.X11-unix/X0
+$Cookiefile:/Xauthority
+
+Cookiefile=/home/marik/.Untrusted_X_cookie # the other name is used !!!
+Cookiefile=${HOME}/.DockerXcookie.untrusted
+
+--name jailed-browser -ti -h jailed-browser
+
+-e 
+DISPLAY=:0 # We always have DISPLAY=:0 due to `-v tmp/.X11-unix/X0:/tmp/.X11-unix/X0` docker create option.
+XAUTHORITY=/Xauthority # already defined in the Dockerfile 
+
+0-th try:
+---------
+$ docker build ~/GIT/jailed-browser/ -t jailed-browser:0
+$ docker create --name jailed-browser-0 -ti -h jailed-browser-0 -v $HOME/Downloads/jailed-browser:/Downloads -v /etc/localtime:/etc/localtime -v /tmp/.X11-unix/X0:/tmp/.X11-unix/X0 -v ${HOME}/.DockerXcookie.untrusted:/Xauthority -e DISPLAY=":0" jailed-browser:0
+$ docker start -ai jailed-browser-0
+ВЫВОДЫ:
+1) firefox запускается, в Интернет выходит.
+2) Дружит с ВПНом: при подключении хоста к ВПН контейнер тоже оказывается подключенным к тому же ВПН. В чём можно убедиться при помощи <https://browserleaks.com/>
+3) Буфер обмена с хостом работает «в одну сторону». Если копировать ИЗ хоста и вставлять В GUI-окно проги, запущенной внутри контейнера, то всё ОК. Причем работают оба «линуксовых» способа: 1)Ctrl+C — Ctrl+V (и Копировать-Вставить через контекстное меню правой клавиши мыши); 2) Выделение левой клавишей мыши — вставка щелчком средней клавишей мыши. В обратную сторону — ИЗ GUI-окна проги, запущенной внутри контейнера, в GUI-окно проги на хосте — вставка не работает ни одним из способов. При попытке это сделать наблюдается временная (несколько секунд как минимум) «заморозка» окна проги на хосте. Видимо, так работают untrusted cookies.
+4) Нет проблем с переключением раскладок клавиатуры в GUI-окне «контейнеровской» проги.
+5) К заголовку окна «контейнеровской» проги добавляется " (на jailed-browser-0)"
+
+ИСПРАВЛЕНИЯ:
+============
+jbjohn@jailed-browser-0:~$ ln -s /Downloads ~/Downloads
+sudo apt-get install less
+sudo apt-get install vim-gtk3 # NO! Does not support cyrilic letters.
+sudo apt-get install featherpad # The same problem.
+apt-get install -y locales
+sudo locale-gen ru_RU.UTF-8
+export LANG=ru_RU.UTF-8   # this is enough for gvim to support cyrilic inpyt. 
+export LANGUAGE=ru_RU:ru
+export LC_LANG=ru_RU.UTF-8
+export LC_ALL=ru_RU.UTF-8  # <------ featherpad still does NOT support cyrilic inpyt at this stage!!!
+
+sudo apt-get install kwrite # Ввод кириллицы с клавы не работает (как у featherpad), но вставка кириллического текста из браузера работает.
+
+# ----------- От этого толку нет:  -----------------------------------------------
+sudo apt-get install keyboard-configuration console-setup
+sudo dpkg-reconfigure keyboard-configuration
+70. Generic 101-key PC
+78. Russian
+7. Alt+Shift
+Временный переключатель между национальной или латинской раскладкой: 5. левый Alt
+3. правый Alt (AltGr)
+# --------------------------------------------------------------------------------
+
+1-st try:
+----------
+ln -s /tmp/.X11-unix/X0 $HOME/.x-unix-socket
+docker create --name jailed-browser-1 -ti -h jailed-browser-1 -v $HOME/Downloads/jailed-browser:/Downloads -v /etc/localtime:/etc/localtime -v $HOME/.x-unix-socket:/tmp/.X11-unix/X0 -v ${HOME}/.DockerXcookie.untrusted:/Xauthority -e DISPLAY=":0" jailed-browser:0
+docker start -ai jailed-browser-1
+ВЫВОДЫ:
+1) GUI-проги работают так же, как и в предыдущем случае. Замена хостового `/tmp/.X11-unix/X0` на симлинк работе не мешает.
+2) firefox запускается, в Интернет выходит.
+
+
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+Processing DISPLAY variable
+---------------------------
+marik@dm-ThinkPad-X280:~/GIT/jailed-browser$ string="localhost:12.0"
+marik@dm-ThinkPad-X280:~/GIT/jailed-browser$ echo ${string}
+localhost:12.0
+marik@dm-ThinkPad-X280:~/GIT/jailed-browser$ echo ${string/.*/}
+localhost:12
+marik@dm-ThinkPad-X280:~/GIT/jailed-browser$ echo ${string/.*/}/*:/
+localhost:12/*:/
+marik@dm-ThinkPad-X280:~/GIT/jailed-browser$ echo {${string/.*/}/*:/}
+{localhost:12/*:/}
+marik@dm-ThinkPad-X280:~/GIT/jailed-browser$ echo ${string/.*/}
+localhost:12
+marik@dm-ThinkPad-X280:~/GIT/jailed-browser$ echo ${string/*:/}
+12.0
+marik@dm-ThinkPad-X280:~/GIT/jailed-browser$ string=":12.0"
+marik@dm-ThinkPad-X280:~/GIT/jailed-browser$ echo ${string/*:/}
+12.0
+marik@dm-ThinkPad-X280:~/GIT/jailed-browser$ echo ${string}
+:12.0
+marik@dm-ThinkPad-X280:~/GIT/jailed-browser$ echo $DISPLAY
+:0
+marik@dm-ThinkPad-X280:~/GIT/jailed-browser$ echo ${string}
+:12.0
+marik@dm-ThinkPad-X280:~/GIT/jailed-browser$ echo ${string##*:}
+12.0
+marik@dm-ThinkPad-X280:~/GIT/jailed-browser$ echo ${DISPLAY##*:}
+0
+marik@dm-ThinkPad-X280:~/GIT/jailed-browser$ string="lo.cal.host:12.0"
+marik@dm-ThinkPad-X280:~/GIT/jailed-browser$ echo ${string##*:}
+12.0
+----------------------------------------------------------------------------------------------------
+Baking a X-cookie
+-----------------
+<https://github.com/mviereck/x11docker/wiki/How-to-access-X-over-TCP-IP-network>
+<https://github.com/mviereck/x11docker/wiki/X-authentication-with-cookies-and-xhost-(%22No-protocol-specified%22-error)>
+
+# Let Xorg generate a trusted cookie that has to be used within 3600 seconds the first time.
+xauth -i -f ~/mycookie generate $DISPLAY . trusted timeout 3600
+
+# The same for UNtrusted cookie:
+xauth -f ~/mycookie generate $DISPLAY . untrusted timeout 3600
+
+
+# Extract part of cookie without DISPLAY and hostname information
+Cookie="$(xauth -i -f ~/mycookie list | awk '{print $3}')"
+# delete new cookie file
+rm ~/mycookie
+# create new cookie file with our new custom display number and extracted cookie part
+xauth -i -f ~/mycookie add :$Newdisplaynumber MIT-MAGIC-COOKIE-1 "$Cookie"
+--------------
+# replace host identification with ffff / family wild
+Cookie="$(xauth -i -f ~/mycookie nlist | sed -e 's/^..../ffff/')"
+echo "$Cookie" | xauth -i -f ~/mycookie nmerge -
+
+Cookiefile='~/mycookie'
+Cookie="$(xauth -f $Cookiefile nlist $DISPLAY | sed -e 's/^..../ffff/')" 
+echo "$Cookie" | xauth -f "$Cookiefile" nmerge -
+----------------------------------------------------------------------------------
+
+$ cp .Xauthority xauthority
+$ cp .Xauthority my_new_cookie
+
+$ xauth -i -f xauthority list
+dm-ThinkPad-X280/unix:0  MIT-MAGIC-COOKIE-1  cf8c17a1eb2d9b749b977f0c1fb9c4e0
+
+$ xauth -i -f xauthority nlist
+0100 0010 646d2d5468696e6b5061642d58323830 0001 30 0012 4d49542d4d414749432d434f4f4b49452d31 0010 cf8c17a1eb2d9b749b977f0c1fb9c4e0
+
+$ Cookie="$(xauth -i -f xauthority nlist | sed -e 's/^..../ffff/')"
+$ xauth -i -f my_new_cookie list
+dm-ThinkPad-X280/unix:0  MIT-MAGIC-COOKIE-1  cf8c17a1eb2d9b749b977f0c1fb9c4e0
+
+$ echo "$Cookie" | xauth -i -f my_new_cookie nmerge -
+$ xauth -i -f my_new_cookie list
+dm-ThinkPad-X280/unix:0  MIT-MAGIC-COOKIE-1  cf8c17a1eb2d9b749b977f0c1fb9c4e0
+#ffff#646d2d5468696e6b5061642d58323830#:0  MIT-MAGIC-COOKIE-1  cf8c17a1eb2d9b749b977f0c1fb9c4e0
+             # Добавилась новая запись, старая (dm-ThinkPad-X280/unix:0) осталась на месте!
+
+$ xauth -i -f ~/my_new_cookie list | awk '{print $3}'
+cf8c17a1eb2d9b749b977f0c1fb9c4e0
+cf8c17a1eb2d9b749b977f0c1fb9c4e0
+
+$ xauth -i -f ~/my_new_cookie remove dm-ThinkPad-X280/unix:0
+$ xauth -i -f ~/my_new_cookie list
+         # ПУСТО !!!
+$ la ~/my_new_cookie
+-rw------- 1 marik marik 0 мар 27 10:41 /home/marik/my_new_cookie
+
+$ echo "$Cookie" | xauth -i -f my_new_cookie nmerge -
+$ xauth -i -f ~/my_new_cookie list
+#ffff#646d2d5468696e6b5061642d58323830#:0  MIT-MAGIC-COOKIE-1  cf8c17a1eb2d9b749b977f0c1fb9c4e0
+------------------------------------------------------------------------------------------------
+
+Alternative way !!!
+-------------------
+$ touch mycookie_3
+$ xauth -i -f ~/mycookie_3 list
+$ xauth -i -f ~/mycookie_3 add jailed-browser:0 MIT-MAGIC-COOKIE-1 "cf8c17a1eb2d9b749b977f0c1fb9c4e0"
+xauth: (argv):1:  bad display name "jailed-browser:0" in "add" command
+
+$ xauth -i -f ~/mycookie_3 list
+$ xauth -i -f ~/mycookie_3 add jailed-browser/unix:0 MIT-MAGIC-COOKIE-1 "cf8c17a1eb2d9b749b977f0c1fb9c4e0"
+$ xauth -i -f ~/mycookie_3 list
+jailed-browser/unix:0  MIT-MAGIC-COOKIE-1  cf8c17a1eb2d9b749b977f0c1fb9c4e0
+$ xauth -i -f ~/mycookie_3 list | awk '{print $3}'
+cf8c17a1eb2d9b749b977f0c1fb9c4e0
+------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+Выбор txt-редактора
+-------------------
+apt-get install -s gedit
+0 upgraded, 478 newly installed, 0 to remove and 0 not upgraded.
+тащит с собой xserver-xorg !
+
+kwrite
+0 upgraded, 179 newly installed, 0 to remove and 0 not upgraded.
+иксы не тащит!!!
+
++ vim-athena -- вообще консольный!
+0 upgraded, 18 newly installed, 0 to remove and 0 not upgraded.
+
++ vim-gtk3
+0 upgraded, 4 newly installed, 0 to remove and 0 not upgraded.
+
++ featherpad
+0 upgraded, 41 newly installed, 0 to remove and 0 not upgraded.
+
+libreoffice
+0 upgraded, 224 newly installed, 0 to remove and 0 not upgraded
+тащит x11-xserver-utils но не весь икс-сервер
+
+notepadqq
+0 upgraded, 463 newly installed, 0 to remove and 0 not upgraded.
+тащит с собой xserver-xorg !

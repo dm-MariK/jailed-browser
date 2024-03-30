@@ -142,7 +142,18 @@ docker start -ai jailed-browser-1
 ВЫВОДЫ:
 1) GUI-проги работают так же, как и в предыдущем случае. Замена хостового `/tmp/.X11-unix/X0` на симлинк работе не мешает.
 2) firefox запускается, в Интернет выходит.
+# --------------------------------------------------------------------------------
 
+2-nd try:
+----------
+$ docker build ~/GIT/jailed-browser/ -t jailed-browser:1
+$ docker create --name jailed-browser-2 -ti -h jailed-browser-2 -v $HOME/Downloads/jailed-browser:/Downloads -v /etc/localtime:/etc/localtime -v $HOME/.x-unix-socket:/tmp/.X11-unix/X0 -v ${HOME}/.DockerXcookie.untrusted:/Xauthority -e DISPLAY=":0" jailed-browser:1
+$ docker start -ai jailed-browser-2
+ВЫВОДЫ:
+1) Сборка прошла без ошибок.
+2) Работает кириллица в kwrite и в gedit. Даже в консоли. Возможно, это эффект от пакетов, которые подтянулись в зависимостях к yandex-browser'у.
+3) firefox запускается, в Интернет выходит.
+4) yandex-browser продолжает фиговничать. По сути -- не рабочий совсем.
 
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------

@@ -178,8 +178,9 @@ wget https://gu-st.ru/content/lending/russian_trusted_sub_ca_pem.crt
 docker build ~/GIT/jailed-browser/ -t jailed-browser:2
 docker create --name jailed-browser-3 -ti -h jailed-browser-3 -v $HOME/Downloads/jailed-browser:/Downloads -v /etc/localtime:/etc/localtime -v $HOME/.x-unix-socket:/tmp/.X11-unix/X0 -v ${HOME}/.DockerXcookie.untrusted:/Xauthority -e DISPLAY=":0" jailed-browser:2
 
-
-
+$ docker start -ai jailed-browser-3
+1) Сборка прошла без ошибок.
+2) С кириллицей -- та же тема, что и в 2-nd try. Дело не в зависимостях, подтянутых Yandex-browser'ом. Видимо, дело в «вовремя» (на этапе сборки Docker-образа) установленной и настроенной локали.
 
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------

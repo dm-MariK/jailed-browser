@@ -155,6 +155,20 @@ $ docker start -ai jailed-browser-2
 3) firefox запускается, в Интернет выходит.
 4) yandex-browser продолжает фиговничать. По сути -- не рабочий совсем.
 
+UPD -- Ставим RU сертификаты:
+<https://dzen.ru/a/ZZrRACoEzhElokg3>
+1) Качаем:
+cd Downloads
+wget https://gu-st.ru/content/lending/russian_trusted_root_ca_pem.crt
+wget https://gu-st.ru/content/lending/russian_trusted_sub_ca_pem.crt
+2) Устанавливаем сертификаты в браузер Mozilla Firefox:
+Открываем настройки браузера, далее Приватность и защита — Сертификаты — Просмотр сертификатов.
+В открытом окне выполняем импорт сертификатов ранее скаченных нами в домашнюю дирикторию.
+Для проверки браузера можете зайти на сайт: <https://www.sberbank.ru/ru/certificates>
+Всё работает. Так же нет проблем с доступом к следующим сайтам:
+  <https://moskva.beeline.ru/customers/products/>
+  <https://msk.rt.ru/>
+  <https://rinet.ru>
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------
 Processing DISPLAY variable

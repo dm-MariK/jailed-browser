@@ -14,7 +14,7 @@ COPY --chmod=644 configs/etc /etc
 COPY --chmod=644 configs/etc_skel /etc/skel
 
 # Copy Yandex-Browser deb-package
-COPY Yandex.deb /Yandex.deb
+#COPY Yandex.deb /Yandex.deb
 
 # + Install most important packages
 # + Install basic fonts
@@ -23,7 +23,7 @@ COPY Yandex.deb /Yandex.deb
 # + Install Firefox
 # + Install vim-gtk3 (gvim) and kwrite text editors
 # + Generate ru_RU.UTF-8 locale
-# + Install Yandex-Browser
+# - Install Yandex-Browser
 # + Set up root password
 # + Add non-root user
 RUN <<EOT bash
@@ -37,9 +37,9 @@ RUN <<EOT bash
   DEBIAN_FRONTEND=noninteractive apt-get install -y -qq vim-gtk3 kwrite
   locale-gen ru_RU.UTF-8
   # ---- \begin{Install-Yandex-Browser} ----------------
-  { DEBIAN_FRONTEND=noninteractive dpkg -i /Yandex.deb && rm -f /Yandex.deb ; } || \
-  { DEBIAN_FRONTEND=noninteractive apt-get install -f -y -qq && \
-  DEBIAN_FRONTEND=noninteractive dpkg -i /Yandex.deb && rm -f /Yandex.deb ; }
+  #{ DEBIAN_FRONTEND=noninteractive dpkg -i /Yandex.deb && rm -f /Yandex.deb ; } || \
+  #{ DEBIAN_FRONTEND=noninteractive apt-get install -f -y -qq && \
+  #DEBIAN_FRONTEND=noninteractive dpkg -i /Yandex.deb && rm -f /Yandex.deb ; }
   # ---- \end{Install-Yandex-Browser} ------------------
   echo "root:${password}" | chpasswd
   # ----- \begin{non-root-user-section} --------------------------

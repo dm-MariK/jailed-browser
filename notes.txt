@@ -181,6 +181,32 @@ docker create --name jailed-browser-3 -ti -h jailed-browser-3 -v $HOME/Downloads
 $ docker start -ai jailed-browser-3
 1) Сборка прошла без ошибок.
 2) С кириллицей -- та же тема, что и в 2-nd try. Дело не в зависимостях, подтянутых Yandex-browser'ом. Видимо, дело в «вовремя» (на этапе сборки Docker-образа) установленной и настроенной локали.
+# --------------------------------------------------------------------------------
+
+FINAL:
+------
+$ docker build ~/GIT/jailed-browser/ -t jailed-browser:2
+[+] Building 373.8s (11/11) FINISHED
+
+$ ~/GIT/jailed-browser/bakeDockerXcookie.sh
+Will bake untrusted cookie.
+
+$ ~/GIT/jailed-browser/prepLnk2Xsocket.sh 
+Symlink exists!
+symlink: /home/marik/.x-unix-socket
+its target: /tmp/.X11-unix/X0
+The link is correct. Nothing to do.
+
+$ docker create --name jailed-browser-2 -ti -h jailed-browser-2 -v $HOME/Downloads/jailed-browser:/Downloads -v /etc/localtime:/etc/localtime -v $HOME/.x-unix-socket:/tmp/.X11-unix/X0 -v ${HOME}/.DockerXcookie.untrusted:/Xauthority -e DISPLAY=":0" jailed-browser:2
+37377b1a4f3da069deb4e7e39a41bbf4909f4a670d388d02e64769e966d8a665
+
+$ docker start -ai jailed-browser-2
+Your password is: jbjohn
+jbjohn@jailed-browser-2:~$
+
+ЗАМЕЧАНИЯ:
+1) RU-сертификаты ставим, как описано выше.
+2) Для доступа к <https://moskva.beeline.ru/customers/products/> нужен еще работающий VPN с выходом в РФ.
 
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------

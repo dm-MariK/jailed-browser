@@ -1,6 +1,7 @@
 FROM ubuntu:20.04
 
 LABEL maintainer="dm-MariK"
+LABEL version="1.0"
 
 # Define non-root user, it's UID, gecos string and password
 ARG user=jbjohn

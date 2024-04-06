@@ -1,0 +1,18 @@
+$ docker start -ai jailed-browser-2 
+Your password is: jbjohn
+
+jbjohn@jailed-browser-2:~$ sudo apt-get purge sshuttle -s
+[sudo] password for jbjohn: 
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following packages were automatically installed and are no longer required:
+  iptables libip6tc2 libmnl0 libnetfilter-conntrack3 libnfnetlink0 libnftnl11 libxtables12
+Use 'sudo apt autoremove' to remove them.
+The following packages will be REMOVED:
+  sshuttle*
+0 upgraded, 0 newly installed, 1 to remove and 0 not upgraded.
+Purg sshuttle [0.78.5-1ubuntu1.1]
+
+jbjohn@jailed-browser-2:~$ sudo apt-get purge sshuttle -y
+jbjohn@jailed-browser-2:~$ sudo apt-get autoremove

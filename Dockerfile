@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 
 LABEL maintainer="dm-MariK"
-LABEL version="2.0"
+LABEL version="2.1"
 
 # Define non-root user, it's UID, gecos string and password
 ARG user=jbjohn
@@ -20,7 +20,7 @@ COPY --chmod=644 configs/etc_skel /etc/skel
 # + Install most important packages
 # + Install basic fonts
 # + Install additional fonts
-# + Install sshuttle - Transparent proxy server for VPN over SSH
+# - Install sshuttle - Transparent proxy server for VPN over SSH
 # + Install Firefox
 # + Install vim-gtk3 (gvim) and kwrite text editors
 # + Generate ru_RU.UTF-8 locale
@@ -33,7 +33,7 @@ RUN <<EOT bash
   DEBIAN_FRONTEND=noninteractive apt-get install -y -qq sudo bash-completion net-tools vim iputils-ping nmap htop mc ssh xauth xterm mesa-utils less locales 
   DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ttf-mscorefonts-installer ttf-dejavu ttf-xfree86-nonfree fonts-dejavu-core fonts-freefont-ttf fonts-opensymbol fonts-urw-base35 fonts-symbola ttf-bitstream-vera 
   DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ttf-unifont xfonts-unifont fonts-prociono ttf-ubuntu-font-family fonts-georgewilliams fonts-hack fonts-yanone-kaffeesatz ttf-aenigma ttf-anonymous-pro ttf-engadget ttf-sjfonts ttf-staypuft ttf-summersby 
-  DEBIAN_FRONTEND=noninteractive apt-get install -y -qq sshuttle
+  #DEBIAN_FRONTEND=noninteractive apt-get install -y -qq sshuttle
   DEBIAN_FRONTEND=noninteractive apt-get install -y -qq firefox firefox-locale-ru browser-plugin-freshplayer-pepperflash
   DEBIAN_FRONTEND=noninteractive apt-get install -y -qq vim-gtk3 kwrite
   locale-gen ru_RU.UTF-8
